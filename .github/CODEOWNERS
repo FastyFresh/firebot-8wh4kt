@@ -1,0 +1,51 @@
+# Unless a later match takes precedence, the core team
+# will be requested for review when someone opens a PR
+* @core-team
+
+# Backend Rust/Python code ownership
+/src/backend/ @backend-team
+
+# Strategy engine requires ML, backend and data science review
+/src/backend/src/strategy_engine/ @ml-team @backend-team @data-science-team
+
+# Frontend React/TypeScript code ownership
+/src/web/ @frontend-team
+
+# Infrastructure code requires both DevOps and security review
+/infrastructure/ @devops-team @security-team
+
+# Execution engine requires backend, trading and security review
+/src/backend/src/execution_engine/ @backend-team @trading-team @security-team
+
+# Risk management requires trading, backend and security review
+/src/backend/src/risk_manager/ @trading-team @backend-team @security-team
+
+# Language-specific reviewers
+*.rs @rust-reviewers
+*.py @python-reviewers
+*.tsx @typescript-reviewers
+*.ts @typescript-reviewers
+
+# Configuration files require security and backend review
+/src/backend/src/config/ @security-team @backend-team
+
+# Infrastructure as code requires infrastructure and security review
+*.tf @infrastructure-team @security-team
+
+# GitHub configuration owned by DevOps
+.github/ @devops-team
+
+# Market analysis owned by data science and ML teams
+/src/backend/src/market_analysis/ @data-science-team @ml-team
+
+# Deployment configurations require DevOps and security review
+/deployment/ @devops-team @security-team
+
+# API endpoints require backend and security review
+/src/backend/src/api/ @backend-team @security-team
+
+# Test suites owned by QA team
+/tests/ @qa-team
+
+# Smart contracts require smart contract team and security review
+*.sol @smart-contract-team @security-team
