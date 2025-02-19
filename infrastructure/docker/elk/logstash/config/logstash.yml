@@ -1,0 +1,69 @@
+# Logstash Configuration for AI Trading Bot
+# Version: 7.17.0
+# Purpose: High-performance log aggregation for trading systems
+
+# Node Configuration
+node.name: ${HOSTNAME}
+
+# Path Settings
+path.data: /usr/share/logstash/data
+path.logs: /var/log/logstash
+path.config: /usr/share/logstash/pipeline
+
+# Pipeline Configuration - Optimized for high-frequency trading
+pipeline.workers: 4
+pipeline.batch.size: 3000
+pipeline.batch.delay: 50
+
+# Queue Settings - Persistent queue for reliability
+queue.type: persisted
+queue.max_bytes: 1gb
+
+# Dead Letter Queue - For handling problematic events
+dead_letter_queue.enable: true
+dead_letter_queue.max_bytes: 500mb
+
+# Monitoring Configuration
+monitoring.enabled: true
+monitoring.elasticsearch.hosts: ["http://elasticsearch:9200"]
+monitoring.elasticsearch.username: logstash_system
+monitoring.collection.interval: 10s
+
+# X-Pack Monitoring
+xpack.monitoring.enabled: true
+xpack.monitoring.elasticsearch.username: logstash_system
+
+# API Settings
+api.http.host: "0.0.0.0"
+api.http.port: 9600
+
+# Configuration Reloading
+config.reload.automatic: true
+config.reload.interval: 3s
+
+# Logging Configuration
+log.level: info
+
+# HTTP Settings
+http.host: "0.0.0.0"
+http.port: 9600
+
+# Memory Management
+pipeline.ordered: auto
+
+# Performance Tuning
+pipeline.output.workers: 4
+pipeline.ecs_compatibility: disabled
+
+# Thread Settings
+thread_pool.bulk.size: 4
+thread_pool.bulk.queue_size: 200
+
+# JVM Settings
+jvm.heap.initial: 1g
+jvm.heap.max: 1g
+
+# Module Settings
+modules:
+  - name: logstash-core
+    version: "7.17.0"
