@@ -1,0 +1,179 @@
+/* Core component stylesheet for AI-Powered Solana Trading Bot
+ * WCAG 2.1 Level AA compliant
+ * Dark theme optimized for trading interfaces
+ * Enhanced accessibility features
+ */
+
+@import '../styles/theme.css';
+
+:root {
+  color-scheme: dark;
+  accent-color: var(--primary-color);
+}
+
+/* Button Component */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  position: relative;
+  background-color: var(--paper-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn:hover:not([aria-disabled='true']) {
+  background-color: var(--hover-overlay);
+}
+
+.btn:active:not([aria-disabled='true']) {
+  background-color: var(--active-overlay);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.btn[aria-disabled='true'] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Card Component */
+.card {
+  background-color: var(--paper-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  border: 1px solid var(--border-color);
+}
+
+/* Input Component */
+.input {
+  width: 100%;
+  padding: var(--spacing-sm);
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-primary);
+  transition: border-color var(--transition-fast);
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+}
+
+.input:hover:not(:disabled) {
+  border-color: var(--text-secondary);
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-color: var(--primary-color);
+}
+
+.input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Table Component */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  border-spacing: 0;
+  font-size: var(--font-size-sm);
+}
+
+.table th {
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-md);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.table td {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table tbody tr:hover {
+  background-color: var(--hover-overlay);
+}
+
+/* Accessibility Enhancements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focus-ring {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.high-contrast {
+  filter: contrast(1.5);
+}
+
+/* Animation Controls */
+.animate {
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
+
+.no-motion {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Media Queries */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .high-contrast {
+    filter: contrast(2);
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  .card {
+    padding: var(--spacing-xl);
+  }
+  
+  .table {
+    font-size: var(--font-size-lg);
+  }
+  
+  .input {
+    font-size: var(--font-size-lg);
+    padding: var(--spacing-md);
+  }
+  
+  .btn {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-lg);
+  }
+}
