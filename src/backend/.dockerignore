@@ -1,0 +1,85 @@
+.git
+.gitignore
+.gitattributes
+
+# Environment and Configuration
+.env
+.env.*
+!.env.example
+*.config.js
+*.conf
+
+# Rust Build Artifacts
+target/
+**/*.rs.bk
+Cargo.lock
+benches/
+
+# Python Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+venv/
+.venv/
+poetry.lock
+pip-log.txt
+
+# Testing and Coverage
+tests/
+**/*test*.rs
+**/*spec*.rs
+coverage/
+.coverage
+.pytest_cache/
+.hypothesis/
+
+# Documentation
+docs/
+*.md
+!README.md
+*.rst
+*.txt
+!requirements.txt
+
+# IDE and Editor Files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.bak
+*.sublime*
+
+# Temporary and Cache Files
+*.log
+*.tmp
+tmp/
+temp/
+.cache/
+.mypy_cache/
+
+# Dependencies
+node_modules/
+jspm_packages/
+bower_components/
+
+# Build Tools
+.dockerignore
+Dockerfile*
+docker-compose*.yml
+.travis.yml
+.gitlab-ci.yml
+
+# Miscellaneous
+*.pid
+*.seed
+*.pid.lock
+.DS_Store
+Thumbs.db
