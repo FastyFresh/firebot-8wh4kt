@@ -1,0 +1,84 @@
+# Development files and dependencies
+.git/
+.gitignore
+.env
+.env.*
+!.env.example
+!.env.production
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Build artifacts and cache
+dist/
+build/
+.cache/
+coverage/
+.next/
+*.tsbuildinfo
+
+# Test files and configurations
+tests/
+__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+jest.config.ts
+.jest-cache/
+test-results/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Documentation
+docs/
+*.md
+!README.md
+!LICENSE
+
+# Source maps and debugging
+*.map
+*.js.map
+*.css.map
+
+# Temporary and log files
+*.log
+tmp/
+temp/
+logs/
+
+# Development configurations
+.eslintrc*
+.prettierrc*
+.stylelintrc*
+tsconfig.json
+!vite.config.ts
+!tailwind.config.js
+
+# Docker files
+.dockerignore
+docker-compose*.yml
+
+# CI/CD and git files
+.github/
+.gitlab/
+.circleci/
+.git*
+
+# Security and sensitive files
+*.pem
+*.key
+*.cert
+*.crt
+*.ca-bundle
+*.p12
+*.pfx
