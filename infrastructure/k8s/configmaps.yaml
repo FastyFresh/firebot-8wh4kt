@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: trading-bot-prod
+  labels:
+    app: trading-bot
+    component: backend
+    environment: production
+  annotations:
+    description: "Backend service configuration for AI-powered Solana trading bot"
+    last-updated: "2024-01-01"
+data:
+  # Logging and Environment
+  RUST_LOG: "info,trading_bot=debug"
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+
+  # Performance Tuning
+  MAX_CONNECTIONS: "1000"
+  STRATEGY_UPDATE_INTERVAL: "300"  # 5 minutes in seconds
+
+  # External API Endpoints
+  SOLANA_RPC_URL: "https://solana-rpc.ap-southeast-1.aws.jito.wtf"
+  JUPITER_API_URL: "https://jupiter.ap-southeast-1.aws.jupiter.ag/v4"
+  PUMP_FUN_API_URL: "https://api.pump.fun/v1"
+  DRIFT_API_URL: "https://api.drift.trade/v2"
+  JITO_API_URL: "https://api.jito.wtf/v1"
+
+  # Internal Services
+  REDIS_HOST: "trading-bot-redis-master.trading-bot-prod.svc.cluster.local"
+  REDIS_PORT: "6379"
+  PROMETHEUS_PORT: "9090"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-config
+  namespace: trading-bot-prod
+  labels:
+    app: trading-bot
+    component: web
+    environment: production
+  annotations:
+    description: "Web dashboard configuration for AI-powered Solana trading bot"
+    last-updated: "2024-01-01"
+data:
+  # Environment Settings
+  NODE_ENV: "production"
+  PORT: "3000"
+
+  # API Configuration
+  API_URL: "https://api.trading-bot.internal"
+  WS_URL: "wss://api.trading-bot.internal/ws"
+  CLOUDFRONT_URL: "https://d1234abcd.cloudfront.net"
+
+  # Performance Settings
+  CACHE_TTL: "300"  # 5 minutes in seconds
+  MAX_WEBSOCKET_CLIENTS: "5000"
