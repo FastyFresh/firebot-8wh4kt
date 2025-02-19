@@ -1,0 +1,95 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: trading-bot-ingress
+  namespace: trading-bot-prod
+  annotations:
+    # Ingress Controller Configuration
+    kubernetes.io/ingress.class: "nginx"
+    
+    # SSL/TLS Configuration
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    
+    # Performance Optimizations
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "10"
+    
+    # CORS Configuration
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://trading-bot.example.com"
+    
+    # Security Headers
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";
+      more_set_headers "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';";
+      more_set_headers "Referrer-Policy: strict-origin-when-cross-origin";
+    
+    # Rate Limiting
+    nginx.ingress.kubernetes.io/limit-rps: "100"
+    nginx.ingress.kubernetes.io/limit-connections: "50"
+    
+    # ModSecurity WAF
+    nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+    nginx.ingress.kubernetes.io/enable-owasp-core-rules: "true"
+    nginx.ingress.kubernetes.io/modsecurity-snippet: |
+      SecRuleEngine On
+      SecRequestBodyAccess On
+      SecRule REQUEST_HEADERS:Content-Type "text/xml" "id:1,drop,status:403,msg:'XML content type not allowed'"
+    
+    # Performance Optimizations
+    nginx.ingress.kubernetes.io/server-snippet: |
+      gzip on;
+      gzip_types text/plain text/css application/json application/javascript;
+      proxy_cache_bypass $http_upgrade;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+    
+    # Monitoring
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9113"
+
+spec:
+  tls:
+  - hosts:
+    - trading-bot.example.com
+    secretName: trading-bot-tls
+  rules:
+  - host: trading-bot.example.com
+    http:
+      paths:
+      # Web Dashboard Route
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: trading-bot-web
+            port:
+              number: 3000
+      
+      # API Route
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: trading-bot-backend
+            port:
+              number: 8000
+      
+      # WebSocket Route
+      - path: /ws
+        pathType: Prefix
+        backend:
+          service:
+            name: trading-bot-backend
+            port:
+              number: 8000
