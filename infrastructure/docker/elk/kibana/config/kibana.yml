@@ -1,0 +1,95 @@
+# Kibana 7.17.0 Configuration
+# Optimized for AI-Powered Solana Trading Bot
+
+#----------------------- Server Configuration -----------------------
+
+# Server settings
+server.name: ${HOSTNAME}
+server.host: "0.0.0.0"
+server.port: 5601
+server.maxPayloadBytes: 10485760
+server.compression.enabled: true
+server.ssl.enabled: false
+
+#----------------------- Elasticsearch Configuration --------------
+
+# Elasticsearch connection settings
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "${KIBANA_SYSTEM_PASSWORD}"
+elasticsearch.requestTimeout: 30000
+elasticsearch.shardTimeout: 30000
+elasticsearch.pingTimeout: 30000
+elasticsearch.startupTimeout: 5000
+
+#----------------------- Kibana Configuration -------------------
+
+# Kibana index settings
+kibana.index: ".kibana"
+kibana.defaultAppId: "dashboard/trading-overview"
+
+# Trading-specific visualization settings
+visualization.heatmap.maxBuckets: 100
+visualization.tsvb.search.timeout: "30s"
+visualization.loadingCount: 100
+
+#----------------------- Security Configuration -----------------
+
+# X-Pack security settings
+xpack.security.enabled: true
+xpack.encryptedSavedObjects.encryptionKey: "${ENCRYPTION_KEY}"
+xpack.security.session.idleTimeout: "1h"
+xpack.security.session.lifespan: "24h"
+
+# Reporting configuration
+xpack.reporting.enabled: true
+xpack.reporting.encryptionKey: "${REPORTING_KEY}"
+xpack.reporting.csv.maxSizeBytes: 10485760
+xpack.reporting.queue.timeout: "2m"
+
+#----------------------- Monitoring Configuration --------------
+
+# X-Pack monitoring settings
+xpack.monitoring.enabled: true
+xpack.monitoring.collection.enabled: true
+xpack.monitoring.collection.interval: 5000
+xpack.monitoring.ui.container.elasticsearch.enabled: true
+
+#----------------------- Logging Configuration ----------------
+
+# Logging settings
+logging.dest: "/var/log/kibana/kibana.log"
+logging.json: true
+logging.rotate:
+  enabled: true
+  size: "100mb"
+  keepFiles: 5
+
+logging.events:
+  ops: true
+  response: true
+  status: true
+
+#----------------------- Performance Configuration -----------
+
+# Operations monitoring
+ops.interval: 5000
+
+# Cache settings
+cache.maxAge: "1h"
+
+# Query settings
+search.timeout: "30s"
+search.maxBuckets: 100000
+
+#----------------------- Internationalization ---------------
+
+# Locale settings
+i18n.locale: "en"
+
+#----------------------- Trading Dashboard Settings ---------
+
+# Custom trading dashboard configuration
+dashboard.hideWriteControls: false
+dashboard.allowEmptyDashboard: false
+dashboard.quota.defaultLimit: 100
