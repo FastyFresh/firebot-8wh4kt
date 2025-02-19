@@ -1,0 +1,82 @@
+[package]
+name = "solana-trading-bot"
+version = "1.0.0"
+edition = "2021"
+rust-version = "1.70"
+authors = ["AI Trading Bot Team"]
+description = "AI-powered autonomous trading system for Solana DEX ecosystem"
+repository = "https://github.com/organization/solana-trading-bot"
+license = "MIT"
+keywords = ["solana", "trading", "dex", "ai", "blockchain"]
+categories = ["finance", "cryptocurrency", "artificial-intelligence"]
+
+[lib]
+name = "solana_trading_bot"
+path = "src/lib.rs"
+
+[[bin]]
+name = "solana_trading_bot"
+path = "src/main.rs"
+
+[dependencies]
+tokio = { version = "1.28", features = ["full", "rt-multi-thread", "macros"] }
+axum = { version = "0.6", features = ["headers", "http2", "json", "multipart", "ws"] }
+solana-sdk = { version = "1.16", features = ["full"] }
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "json", "chrono", "uuid", "offline"] }
+redis = { version = "0.23", features = ["tokio-comp", "connection-manager", "aio", "cluster"] }
+prometheus = { version = "0.13", features = ["process"] }
+tracing = { version = "0.1.37", features = ["attributes", "async-await"] }
+tracing-subscriber = { version = "0.3.17", features = ["env-filter", "json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anchor-client = { version = "0.27", features = ["debug"] }
+jupiter-core = "0.1"
+
+# Additional dependencies for production features
+futures = "0.3"
+hyper = { version = "0.14", features = ["full"] }
+tower = { version = "0.4", features = ["full"] }
+tower-http = { version = "0.4", features = ["trace", "cors", "compression-full"] }
+uuid = { version = "1.4", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "1.0"
+anyhow = "1.0"
+async-trait = "0.1"
+dashmap = "5.5"
+parking_lot = "0.12"
+metrics = "0.21"
+opentelemetry = { version = "0.19", features = ["rt-tokio"] }
+opentelemetry-jaeger = { version = "0.18", features = ["rt-tokio"] }
+
+[dev-dependencies]
+tokio-test = "0.4"
+mockall = "0.11"
+wiremock = "0.5"
+test-case = "3.1"
+proptest = "1.2"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
+debug = false
+strip = true
+panic = "abort"
+
+[profile.dev]
+opt-level = 0
+debug = true
+
+[workspace]
+members = [
+    "crates/strategy-engine",
+    "crates/execution-engine",
+    "crates/data-collector"
+]
+
+[features]
+default = ["production"]
+production = []
+development = ["tracing/max_level_debug", "console-subscriber"]
+testing = ["mockall", "proptest"]
+metrics = ["prometheus", "opentelemetry"]
