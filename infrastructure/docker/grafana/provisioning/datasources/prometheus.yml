@@ -1,0 +1,48 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    version: 1
+    editable: false
+    jsonData:
+      # Aligned with Prometheus global scrape interval
+      timeInterval: "15s"
+      # Optimized for high-frequency trading query needs
+      queryTimeout: "30s"
+      # Use POST method for better handling of large queries
+      httpMethod: "POST"
+      # Enable alert management for trading thresholds
+      manageAlerts: true
+      # Trace integration for performance debugging
+      exemplarTraceIdDestinations:
+        - name: "trace_id"
+          datasourceUid: "jaeger"
+      # Performance optimizations for HFT metrics
+      timeSeriesQuery:
+        # Match Prometheus scrape timeout
+        maxDataPoints: 15000
+        # Enable streaming for real-time updates
+        streaming:
+          enabled: true
+          maxStreams: 1000
+      # Cache settings for frequent queries
+      cacheLevel: "strong"
+      # Enhanced query performance settings
+      disableMetricsLookup: false
+      incrementalQuerying:
+        enabled: true
+        maxDataPoints: 50000
+      # Metrics discovery settings
+      prometheusVersion: "2.45.0"
+      prometheusType: "Prometheus"
+      # Alert integration settings
+      alertingEnabled: true
+      alertingErrorOrTimeout: "error"
+      # Custom query optimization
+      customQueryParameters:
+        maxSamples: "100000000"
+        maxQueryTime: "300"
