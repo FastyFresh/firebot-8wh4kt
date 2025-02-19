@@ -1,0 +1,32 @@
+[toolchain]
+# Specifies exact Rust version 1.70.0 for production stability and consistent builds
+channel = "1.70.0"
+
+# Required components for development and production builds
+components = [
+    "rustfmt",     # Code formatting tool
+    "clippy",      # Linting tool
+    "rust-src",    # Source code for standard library
+    "rust-analyzer" # IDE support
+]
+
+# Target platform specification
+targets = [
+    "x86_64-unknown-linux-gnu" # Linux x86_64 target for production deployment
+]
+
+# Custom profile with optimized settings for maximum performance with safety guarantees
+[profile]
+# Optimize for maximum performance
+codegen-units = "1"
+opt-level = "3"
+
+# Enable debug information for production diagnostics
+debug = true
+
+# Maintain safety checks in production
+debug-assertions = true
+overflow-checks = true
+
+# Enable incremental compilation for faster development builds
+incremental = true
