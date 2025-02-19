@@ -1,0 +1,173 @@
+# Istio Service Mesh Configuration v1.18
+# Purpose: Advanced traffic management, security, and observability for the AI-powered Solana trading bot
+
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: trading-bot-virtual-service
+  namespace: trading-bot-prod
+  labels:
+    app: trading-bot
+    environment: production
+spec:
+  hosts:
+  - trading-bot-backend
+  - trading-bot-web
+  gateways:
+  - trading-bot-gateway
+  http:
+  # API Routes
+  - match:
+    - uri:
+        prefix: "/api"
+    route:
+    - destination:
+        host: trading-bot-backend
+        port:
+          number: 8000
+        subset: v1
+    timeout: 500ms
+    retries:
+      attempts: 3
+      perTryTimeout: 200ms
+      retryOn: connect-failure,refused-stream,unavailable,5xx
+    corsPolicy:
+      allowOrigins:
+      - exact: https://trading-bot.com
+      allowMethods:
+      - GET
+      - POST
+      allowHeaders:
+      - Authorization
+      - Content-Type
+      maxAge: "24h"
+  # WebSocket Routes
+  - match:
+    - uri:
+        prefix: "/ws"
+    route:
+    - destination:
+        host: trading-bot-backend
+        port:
+          number: 8000
+        subset: v1
+    timeout: 86400s # 24h for WebSocket connections
+    websocketUpgrade: true
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: trading-bot-destination-rule
+  namespace: trading-bot-prod
+spec:
+  host: trading-bot-backend
+  trafficPolicy:
+    loadBalancer:
+      simple: LEAST_CONN
+    connectionPool:
+      tcp:
+        maxConnections: 1000
+        connectTimeout: 100ms
+        tcpKeepalive:
+          time: 7200s
+          interval: 75s
+          probes: 10
+      http:
+        http1MaxPendingRequests: 1000
+        maxRequestsPerConnection: 100
+        maxRetries: 3
+        idleTimeout: 15s
+        h2MaxRequests: 1000
+    outlierDetection:
+      consecutive5xxErrors: 5
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 10
+      minHealthPercent: 50
+    tls:
+      mode: STRICT
+      clientCertificate: /etc/certs/cert-chain.pem
+      privateKey: /etc/certs/key.pem
+      caCertificates: /etc/certs/root-cert.pem
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: trading-bot-auth-policy
+  namespace: trading-bot-prod
+spec:
+  selector:
+    matchLabels:
+      app: trading-bot
+  rules:
+  # API Access Rules
+  - from:
+    - source:
+        principals: ["cluster.local/ns/trading-bot-prod/sa/trading-bot-web"]
+        namespaces: ["trading-bot-prod"]
+    to:
+    - operation:
+        methods: ["GET", "POST"]
+        paths: ["/api/*"]
+        ports: ["8000"]
+    when:
+    - key: request.auth.claims[iss]
+      values: ["https://trading-bot.auth0.com/"]
+  # WebSocket Access Rules
+  - from:
+    - source:
+        principals: ["cluster.local/ns/trading-bot-prod/sa/trading-bot-web"]
+        namespaces: ["trading-bot-prod"]
+    to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/ws/*"]
+        ports: ["8000"]
+    when:
+    - key: request.auth.claims[iss]
+      values: ["https://trading-bot.auth0.com/"]
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: trading-bot-peer-auth
+  namespace: trading-bot-prod
+spec:
+  selector:
+    matchLabels:
+      app: trading-bot
+  mtls:
+    mode: STRICT
+  portLevelMtls:
+    8000:
+      mode: STRICT
+    9090:
+      mode: STRICT
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: trading-bot-gateway
+  namespace: trading-bot-prod
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: trading-bot-tls
+    hosts:
+    - "trading-bot.com"
+    - "api.trading-bot.com"
