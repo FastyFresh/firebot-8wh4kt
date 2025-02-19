@@ -1,0 +1,177 @@
+/* Global stylesheet for AI-Powered Solana Trading Bot
+ * WCAG 2.1 Level AA compliant
+ * Dark theme optimized for trading interfaces
+ * Minimum viewport: 1920x1080
+ */
+
+@import '../styles/theme.css';
+
+/* Reset & Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-primary);
+  min-width: 1920px;
+  overflow-x: auto;
+  line-height: var(--line-height-normal);
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Interactive Elements */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  padding: var(--spacing-sm);
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  background-color: var(--paper-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-sm);
+}
+
+/* Media Elements */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+}
+
+/* Focus States */
+:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  transition: outline-offset 0.2s ease-in-out;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  transition: outline-offset 0.2s ease-in-out;
+}
+
+/* Utility Classes */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scrollbar-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.focus-trap {
+  outline: none;
+}
+
+.focus-trap:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Layout Classes */
+.container {
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+.flex {
+  display: flex;
+}
+
+.flex--center {
+  align-items: center;
+  justify-content: center;
+}
+
+.grid {
+  display: grid;
+}
+
+.grid--auto-fit {
+  grid-template-columns: repeat(auto-fit, minmax(var(--min-column-width), 1fr));
+}
+
+/* Media Queries */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  .container {
+    padding: 0 var(--spacing-xl);
+    max-width: 2560px;
+  }
+}
+
+@media screen and (max-width: 1919px) {
+  body {
+    overflow-x: scroll;
+  }
+  
+  .container {
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color-scheme: dark;
+  }
+  
+  :root {
+    color-adjust: exact;
+  }
+}
