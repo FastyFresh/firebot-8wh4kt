@@ -1,0 +1,129 @@
+# Build Outputs
+target/
+dist/
+build/
+*.o
+*.so
+*.pyc
+__pycache__/
+anchor/target/
+solana-program/target/
+.anchor/
+*.wasm
+bundler-output/
+
+# Dependencies
+node_modules/
+.venv/
+venv/
+poetry.lock
+package-lock.json
+yarn.lock
+cargo.lock
+.cargo/
+pip-wheel-metadata/
+.pnpm-store/
+
+# Environment & Secrets
+.env
+.env.*
+*.pem
+*.key
+secrets/
+.aws/
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+wallet-keys/
+trading-keys.json
+strategy-secrets.yaml
+.solana-config/
+
+# IDE & Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+.history/
+*.sublime-workspace
+*.sublime-project
+.settings/
+
+# Logs & Temporary
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+tmp/
+temp/
+trading-logs/
+performance-logs/
+debug-output/
+market-data-cache/
+
+# Test Coverage
+coverage/
+.coverage
+htmlcov/
+.pytest_cache/
+.nyc_output/
+junit.xml
+test-results/
+cypress/videos/
+cypress/screenshots/
+
+# Trading Specific
+backtest_results/
+strategy_cache/
+model_checkpoints/
+*.onnx
+*.pt
+*.h5
+market_snapshots/
+position_history/
+risk_reports/
+optimization_results/
+
+# Infrastructure
+.terraform.lock.hcl
+*.tfvars
+kubeconfig
+*.pem
+*.crt
+*.key
+aws-credentials/
+cluster-config/
+deployment-secrets/
+
+# Local Development
+.local/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup Files
+*.bak
+*.backup
+*.swp
+*.swo
+*~
+
+# Miscellaneous
+.git/
+.gitattributes
+.eslintcache
+.stylelintcache
+.env.example
