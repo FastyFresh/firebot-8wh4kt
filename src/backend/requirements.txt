@@ -6,7 +6,7 @@ websockets==11.0.3
 prometheus-client==0.17.0
 python-jose==3.3.0
 sqlalchemy==2.0.0
-psycopg2-binary==2.9.6
+psycopg2-binary==2.9.10
 redis==4.5.5
 scipy==1.10.0
 scikit-learn==1.2.2
