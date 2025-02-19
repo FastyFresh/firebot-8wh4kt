@@ -1,0 +1,158 @@
+/* Core layout stylesheet for AI-Powered Solana Trading Bot
+ * Implements grid-based layout system with performance optimizations
+ * WCAG 2.1 Level AA compliant
+ * Minimum viewport: 1920x1080
+ */
+
+@import '../styles/theme.css';
+
+/* Global Layout Container */
+.app-container {
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: auto 1fr auto;
+  contain: layout size;
+  will-change: transform;
+}
+
+/* Main Content Layout */
+.main-content {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--spacing-lg);
+  min-width: 1920px;
+  height: 100%;
+  content-visibility: auto;
+}
+
+/* Layout Grid Classes */
+.navigation-panel {
+  width: 240px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+  contain: layout style;
+  will-change: transform;
+}
+
+.content-area {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+  content-visibility: auto;
+  contain: layout style;
+}
+
+.monitoring-panel {
+  width: 320px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+  contain: layout style;
+  will-change: transform;
+}
+
+/* Trading Layout Classes */
+.trading-grid {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--spacing-lg);
+  contain: layout style;
+}
+
+.chart-container {
+  width: 100%;
+  min-height: 500px;
+  max-height: 800px;
+  resize: vertical;
+  overflow: hidden;
+  contain: layout size;
+  will-change: height;
+}
+
+.order-book-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  contain: layout style;
+}
+
+/* Portfolio Layout Classes */
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  contain: layout style;
+}
+
+.metrics-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+  contain: layout style;
+}
+
+/* Utility Layout Classes */
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  contain: layout style;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  contain: layout style;
+}
+
+.gap-lg {
+  gap: var(--spacing-lg);
+}
+
+.gap-xl {
+  gap: var(--spacing-xl);
+}
+
+/* Ultra-wide Screen Optimizations */
+@media screen and (min-width: 2560px) {
+  .main-content {
+    max-width: 3440px;
+    margin: 0 auto;
+    contain: layout style;
+  }
+
+  .chart-container {
+    max-height: 1000px;
+    contain: layout size;
+  }
+}
+
+/* Standard Desktop Optimizations */
+@media screen and (min-width: 1920px) and (max-width: 2559px) {
+  .main-content {
+    max-width: 1920px;
+    margin: 0 auto;
+    contain: layout style;
+  }
+
+  .chart-container {
+    max-height: 800px;
+    contain: layout size;
+  }
+}
+
+/* Minimum Width Enforcement */
+@media screen and (max-width: 1919px) {
+  .main-content {
+    min-width: 1920px;
+    overflow-x: auto;
+    overscroll-behavior: contain;
+  }
+}
