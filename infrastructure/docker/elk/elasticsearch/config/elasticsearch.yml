@@ -1,0 +1,83 @@
+# Elasticsearch 7.17.0 Configuration
+# Optimized for AI-Powered Solana Trading Bot
+
+#----------------------- Cluster Configuration ------------------------
+
+# Cluster name for trading bot environment
+cluster.name: trading-bot-cluster
+
+# Node configuration
+node.name: ${HOSTNAME}
+node.roles: [ master, data, ingest ]
+node.master: true
+node.data: true
+node.ingest: true
+
+#----------------------- Paths Configuration -------------------------
+
+# Data and log paths
+path.data: /usr/share/elasticsearch/data
+path.logs: /var/log/elasticsearch
+
+#----------------------- Memory Configuration -----------------------
+
+# Lock memory to prevent swapping
+bootstrap.memory_lock: true
+bootstrap.system_call_filter: true
+
+#----------------------- Network Configuration ----------------------
+
+# Network binding and publishing
+network.host: 0.0.0.0
+network.port: 9200
+network.publish_host: ${HOSTNAME}
+
+#----------------------- Discovery Configuration -------------------
+
+# Single-node discovery for containerized deployment
+discovery.type: single-node
+discovery.seed_hosts: [ "127.0.0.1" ]
+
+#----------------------- Security Configuration --------------------
+
+# X-Pack security features
+xpack.security.enabled: true
+xpack.monitoring.enabled: true
+xpack.watcher.enabled: true
+xpack.ml.enabled: true
+
+#----------------------- Index Configuration ----------------------
+
+# Index buffer and cache settings optimized for trading data
+indices.memory.index_buffer_size: 30%
+indices.queries.cache.size: 20%
+indices.fielddata.cache.size: 20%
+indices.recovery.max_bytes_per_sec: 100mb
+
+#----------------------- Thread Pool Configuration ----------------
+
+# Thread pools optimized for trading workloads
+thread_pool:
+  write:
+    size: 8
+    queue_size: 1000
+  search:
+    size: 8
+    queue_size: 1000
+  get:
+    size: 4
+    queue_size: 1000
+
+#----------------------- Disk Allocation Configuration ------------
+
+# Disk-based shard allocation thresholds
+cluster.routing.allocation.disk.threshold_enabled: true
+cluster.routing.allocation.disk.watermark.low: 85%
+cluster.routing.allocation.disk.watermark.high: 90%
+cluster.routing.allocation.disk.watermark.flood_stage: 95%
+
+#----------------------- Action Configuration --------------------
+
+# Index creation and deletion settings
+action.auto_create_index: true
+action.destructive_requires_name: true
