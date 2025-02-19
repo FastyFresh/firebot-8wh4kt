@@ -1,0 +1,13 @@
+numpy==1.24.0
+pandas==2.0.0
+fastapi==0.100.0
+uvicorn==0.22.0
+websockets==11.0.3
+prometheus-client==0.17.0
+python-jose==3.3.0
+sqlalchemy==2.0.0
+psycopg2-binary==2.9.6
+redis==4.5.5
+scipy==1.10.0
+scikit-learn==1.2.2
+python-dotenv==1.0.0
