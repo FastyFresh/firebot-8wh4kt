@@ -1,0 +1,139 @@
+/* Core theme file for AI-Powered Solana Trading Bot
+ * WCAG 2.1 Level AA compliant
+ * Optimized for dark mode trading interfaces
+ * Minimum viewport: 1920x1080
+ */
+
+:root {
+  /* Core Colors */
+  --background-color: #121212;
+  --paper-color: #1E1E1E;
+  --primary-color: #00C853;
+  --secondary-color: #FF3D00;
+  --text-primary: #FFFFFF;
+  --text-secondary: #B3B3B3;
+  --border-color: #333333;
+  --chart-grid: #2C2C2C;
+
+  /* Trading-Specific Colors */
+  --profit-color: #00C853;
+  --loss-color: #FF3D00;
+  --alert-color: #FFC107;
+  --neutral-color: #64B5F6;
+
+  /* State Colors */
+  --hover-overlay: rgba(255, 255, 255, 0.05);
+  --active-overlay: rgba(255, 255, 255, 0.1);
+  --disabled-overlay: rgba(255, 255, 255, 0.12);
+
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-xxl: 1.5rem;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-loose: 1.8;
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.02em;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+
+  /* Trading-Specific Spacing */
+  --chart-padding: 1.5rem;
+  --orderbook-row-height: 1.5rem;
+  --widget-gap: 1rem;
+  --panel-padding: 1.25rem;
+
+  /* Breakpoints */
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1440px;
+  --breakpoint-xxl: 1920px;
+  --breakpoint-ultra: 2560px;
+
+  /* Effects */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+}
+
+/* Theme Utility Classes */
+.theme-dark {
+  background-color: var(--background-color);
+  color: var(--text-primary);
+}
+
+.theme-text-primary {
+  color: var(--text-primary);
+}
+
+.theme-text-secondary {
+  color: var(--text-secondary);
+}
+
+.theme-profit {
+  color: var(--profit-color);
+}
+
+.theme-loss {
+  color: var(--loss-color);
+}
+
+/* Dark Mode Preference */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #121212;
+    --text-primary: #FFFFFF;
+  }
+}
+
+/* Large Screen Optimizations */
+@media screen and (min-width: 1920px) {
+  :root {
+    --spacing-lg: 2rem;
+    --spacing-xl: 2.5rem;
+    --chart-padding: 2rem;
+    --panel-padding: 1.75rem;
+  }
+}
+
+/* Ultra-wide Screen Optimizations */
+@media screen and (min-width: 2560px) {
+  :root {
+    --spacing-lg: 2.5rem;
+    --spacing-xl: 3rem;
+    --chart-padding: 2.5rem;
+    --panel-padding: 2rem;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary: #FFFFFF;
+    --text-secondary: #FFFFFF;
+    --border-color: #FFFFFF;
+    --chart-grid: #666666;
+  }
+}
