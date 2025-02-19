@@ -1,0 +1,301 @@
+---
+# Elasticsearch StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elasticsearch
+  namespace: trading-system
+  labels:
+    app: elasticsearch
+    component: logging
+    part-of: trading-bot
+spec:
+  serviceName: elasticsearch-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+      initContainers:
+        - name: fix-permissions
+          image: busybox:1.32
+          command: ["sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data"]
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+        - name: increase-vm-max-map
+          image: busybox:1.32
+          command: ["sysctl", "-w", "vm.max_map_count=262144"]
+          securityContext:
+            privileged: true
+      containers:
+        - name: elasticsearch
+          image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+          resources:
+            limits:
+              cpu: "2000m"
+              memory: "4Gi"
+            requests:
+              cpu: "1000m"
+              memory: "2Gi"
+          env:
+            - name: node.name
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: cluster.name
+              value: "trading-metrics-cluster"
+            - name: discovery.seed_hosts
+              value: "elasticsearch-0.elasticsearch-headless,elasticsearch-1.elasticsearch-headless,elasticsearch-2.elasticsearch-headless"
+            - name: cluster.initial_master_nodes
+              value: "elasticsearch-0,elasticsearch-1,elasticsearch-2"
+            - name: ES_JAVA_OPTS
+              value: "-Xms2g -Xmx2g -XX:+UseG1GC -XX:+HeapDumpOnOutOfMemoryError"
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                secretRef:
+                  name: elastic-credentials
+                  key: password
+          ports:
+            - containerPort: 9200
+              name: rest
+              protocol: TCP
+            - containerPort: 9300
+              name: inter-node
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+            - name: elasticsearch-config
+              mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+              subPath: elasticsearch.yml
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /_cluster/health
+              port: 9200
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /_cluster/health
+              port: 9200
+            initialDelaySeconds: 120
+            periodSeconds: 20
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: gp2
+        resources:
+          requests:
+            storage: 100Gi
+
+---
+# Logstash Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: trading-system
+  labels:
+    app: logstash
+    component: logging
+    part-of: trading-bot
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+        - name: logstash
+          image: docker.elastic.co/logstash/logstash:7.17.0
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+          env:
+            - name: LS_JAVA_OPTS
+              value: "-Xms1g -Xmx1g -XX:+UseG1GC"
+            - name: ELASTIC_PASSWORD
+              valueFrom:
+                secretRef:
+                  name: elastic-credentials
+                  key: password
+          ports:
+            - containerPort: 5044
+              name: beats
+            - containerPort: 9600
+              name: monitoring
+          volumeMounts:
+            - name: logstash-config
+              mountPath: /usr/share/logstash/config/logstash.yml
+              subPath: logstash.yml
+            - name: logstash-pipeline
+              mountPath: /usr/share/logstash/pipeline
+            - name: logstash-patterns
+              mountPath: /usr/share/logstash/patterns
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9600
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9600
+            initialDelaySeconds: 120
+            periodSeconds: 20
+      volumes:
+        - name: logstash-config
+          configMap:
+            name: logstash-config
+        - name: logstash-pipeline
+          configMap:
+            name: logstash-pipeline
+        - name: logstash-patterns
+          configMap:
+            name: logstash-patterns
+
+---
+# Kibana Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+  namespace: trading-system
+  labels:
+    app: kibana
+    component: logging
+    part-of: trading-bot
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+        - name: kibana
+          image: docker.elastic.co/kibana/kibana:7.17.0
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+          env:
+            - name: ELASTICSEARCH_HOSTS
+              value: "http://elasticsearch-headless:9200"
+            - name: ELASTICSEARCH_USERNAME
+              value: kibana_system
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretRef:
+                  name: elastic-credentials
+                  key: kibana-password
+          ports:
+            - containerPort: 5601
+              name: http
+          volumeMounts:
+            - name: kibana-config
+              mountPath: /usr/share/kibana/config/kibana.yml
+              subPath: kibana.yml
+          readinessProbe:
+            httpGet:
+              path: /api/status
+              port: 5601
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/status
+              port: 5601
+            initialDelaySeconds: 120
+            periodSeconds: 20
+      volumes:
+        - name: kibana-config
+          configMap:
+            name: kibana-config
+
+---
+# Services
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-headless
+  namespace: trading-system
+spec:
+  clusterIP: None
+  selector:
+    app: elasticsearch
+  ports:
+    - port: 9200
+      name: rest
+    - port: 9300
+      name: inter-node
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+  namespace: trading-system
+spec:
+  selector:
+    app: elasticsearch
+  ports:
+    - port: 9200
+      name: rest
+    - port: 9300
+      name: inter-node
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+  namespace: trading-system
+spec:
+  selector:
+    app: logstash
+  ports:
+    - port: 5044
+      name: beats
+    - port: 9600
+      name: monitoring
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+  namespace: trading-system
+spec:
+  selector:
+    app: kibana
+  ports:
+    - port: 5601
+      name: http
