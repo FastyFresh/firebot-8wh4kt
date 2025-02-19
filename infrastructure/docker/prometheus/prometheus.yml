@@ -1,0 +1,79 @@
+# Prometheus configuration for AI-Powered Solana Trading Bot
+# Version: 2.45.0
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+  external_labels:
+    environment: production
+    region: ap-southeast-1
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+      timeout: 5s
+      scheme: http
+
+# Rule files containing alert definitions
+rule_files:
+  - /etc/prometheus/rules/trading_alerts.yml
+  - /etc/prometheus/rules/system_alerts.yml
+  - /etc/prometheus/rules/performance_alerts.yml
+
+# Scrape configurations for all system components
+scrape_configs:
+  # Trading Engine metrics
+  - job_name: trading_engine
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['execution_engine:8080']
+    scrape_interval: 5s
+    scrape_timeout: 4s
+    metric_relabel_configs:
+      - source_labels: ['__name__']
+        regex: 'trade_execution_.*'
+        action: keep
+
+  # Strategy Engine metrics
+  - job_name: strategy_engine
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['strategy_engine:8081']
+    scrape_interval: 10s
+    honor_labels: true
+
+  # Risk Manager metrics
+  - job_name: risk_manager
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['risk_manager:8082']
+    scrape_interval: 15s
+
+  # Data Collector metrics
+  - job_name: data_collector
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['data_collector:8083']
+    scrape_interval: 5s
+    scrape_timeout: 4s
+
+  # Node exporter metrics for system-level monitoring
+  - job_name: node
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+        - 'trading_engine:9100'
+        - 'strategy_engine:9100'
+        - 'risk_manager:9100'
+        - 'data_collector:9100'
+
+# Custom metric definitions are handled by the respective exporters
+# trade_execution_histogram - High-resolution histogram for trade execution latencies
+# strategy_performance_score - Real-time strategy performance tracking
+# portfolio_total_balance - Portfolio balance monitoring
+# active_trades_gauge - Active trade count tracking
+# data_collection_lag - Data collection latency measurements
