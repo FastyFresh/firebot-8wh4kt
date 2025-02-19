@@ -1,0 +1,116 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: web-policy
+  namespace: trading-bot-prod
+  labels:
+    app: trading-bot
+    component: network-policy
+  annotations:
+    description: "Network policy for web dashboard pods with enhanced security controls"
+spec:
+  podSelector:
+    matchLabels:
+      app: trading-bot
+      component: web
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 3000
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: trading-bot
+              component: backend
+      ports:
+        - protocol: TCP
+          port: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-policy
+  namespace: trading-bot-prod
+  labels:
+    app: trading-bot
+    component: network-policy
+  annotations:
+    description: "Network policy for backend service pods with comprehensive security measures"
+spec:
+  podSelector:
+    matchLabels:
+      app: trading-bot
+      component: backend
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: trading-bot
+              component: web
+      ports:
+        - protocol: TCP
+          port: 8000
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9090
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: redis
+              component: cache
+      ports:
+        - protocol: TCP
+          port: 6379
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+      ports:
+        - protocol: TCP
+          port: 443
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-policy
+  namespace: trading-bot-prod
+  labels:
+    app: trading-bot
+    component: network-policy
+  annotations:
+    description: "Network policy for Redis cache pods with strict access controls"
+spec:
+  podSelector:
+    matchLabels:
+      app: redis
+      component: cache
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: trading-bot
+              component: backend
+      ports:
+        - protocol: TCP
+          port: 6379
