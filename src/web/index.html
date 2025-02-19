@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Character encoding and viewport configuration -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, minimum-width=1920">
+    <meta name="theme-color" content="#121212">
+
+    <!-- SEO and application metadata -->
+    <meta name="description" content="AI-Powered Solana Trading Bot Dashboard - Professional-grade automated trading platform">
+    <meta name="application-name" content="AI Trading Bot">
+    <meta name="mobile-web-app-capable" content="no">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' wss: https:;">
+
+    <title>AI Trading Bot Dashboard</title>
+
+    <!-- Resource hints for performance optimization -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://api.jupiter.ag">
+
+    <!-- Google Fonts - Inter for trading interface -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Global styles -->
+    <link rel="stylesheet" href="./src/styles/global.css">
+
+    <!-- Development HMR client - @vite/client v4.0.0 -->
+    <script type="module" src="/@vite/client"></script>
+</head>
+<body>
+    <!-- Skip link for accessibility -->
+    <a href="#root" id="skip-to-main" class="visually-hidden">Skip to main content</a>
+
+    <!-- Root application container -->
+    <div 
+        id="root" 
+        role="application" 
+        aria-label="AI-Powered Solana Trading Dashboard"
+        class="theme-dark"
+    ></div>
+
+    <!-- Fallback for JavaScript disabled browsers -->
+    <noscript>
+        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; background: #1E1E1E; color: #FFFFFF; padding: 20px; border-radius: 4px;">
+            <h1>JavaScript Required</h1>
+            <p>Please enable JavaScript to use the AI Trading Bot Dashboard.</p>
+        </div>
+    </noscript>
+
+    <!-- Main application entry point -->
+    <script type="module" src="./src/index.tsx"></script>
+</body>
+</html>
